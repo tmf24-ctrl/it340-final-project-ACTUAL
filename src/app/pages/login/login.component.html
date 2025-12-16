@@ -5,16 +5,30 @@
   </div>
   
   <div class="login-box">
-    <input type="email" placeholder="Email" />
-    <input type="password" placeholder="Password" />
+    <h2>Log In</h2>
+
+    <!-- Correctly closed input tags -->
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email"
+    />
+
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+    />
+
+    <!-- Log In Button -->
+    <button class="login-btn" (click)="login()">Sign Up</button>
     
-    <button class="login-btn">Log In</button>
-    
-    <button class="signup-btn">Sign Up</button>
-    
-    <a class="forgot" href="#">Forgot Password?</a>
-    
+    <p class="signup-text">
+      Don't have an account?
+      <a (click)="goToSignup()">Sign Up</a>
+    </p>
   </div>
   
   <p class="footer">Discover, Create, and Share Your Sound.</p>
 </div>
+
