@@ -1,0 +1,34 @@
+<div class="background">
+  <div class="logo">
+    <span class="icon">🎵</span>
+    <span class="title">TuneSpace</span>
+  </div>
+  
+  <div class="login-box">
+    <h2>Log In</h2>
+
+    <!-- Correctly closed input tags -->
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email"
+    />
+
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+    />
+
+    <!-- Log In Button -->
+    <button class="login-btn" (click)="login()">Sign Up</button>
+    
+    <p class="signup-text">
+      Don't have an account?
+      <a (click)="goToSignup()">Sign Up</a>
+    </p>
+  </div>
+  
+  <p class="footer">Discover, Create, and Share Your Sound.</p>
+</div>
+
