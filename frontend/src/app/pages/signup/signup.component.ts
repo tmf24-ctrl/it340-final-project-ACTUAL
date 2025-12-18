@@ -1,35 +1,43 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service'; // import AuthService
 
 @Component({
   standalone: true,
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.scss'],
-  imports: [FormsModule],  // Import FormsModule here for ngModel
+  imports: [FormsModule],
 })
 export class SignupComponent {
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
+  qrCode: string = ''; // for 2FA QR code
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   register() {
-    console.log("Registering user:", this.email);
-
     if (this.password !== this.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
-    alert("Account created successfully!");
-    this.router.navigate(['/']);  // Navigate to home or another route
+    // Call AuthService to register user
+    this.authService.register(this.email, this.password).subscribe({
+      next: (res) => {
+        this.qrCode = res.qr; // save QR code returned by backend
+        alert("Account created successfully! Scan the QR code with your authenticator app.");
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Registration failed. Maybe this email is already registered.");
+      }
+    });
   }
 
   goToLogin() {
-    this.router.navigate(['/login']);  // Navigate to login page
+    this.router.navigate(['/login']);
   }
 }
-
