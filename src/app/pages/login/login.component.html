@@ -21,11 +21,11 @@
     />
 
     <!-- Log In Button -->
-    <button class="login-btn" (click)="login()">Sign Up</button>
+    <button class="login-btn" (click)="login()">Log In</button>
     
     <p class="signup-text">
       Don't have an account?
-      <a (click)="goToSignup()">Sign Up</a>
+      <a [routerLink]="['/signup']">Sign Up</a>
     </p>
   </div>
   

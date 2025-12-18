@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';  // Import FormsModule
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule],  // Import FormsModule here for ngModel
+  imports: [FormsModule, RouterModule],  // Import FormsModule here for ngModel
 })
 export class LoginComponent {
   email: string = '';
