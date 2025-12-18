@@ -1,9 +1,11 @@
 <div class="background">
+  <!-- Logo / Header -->
   <div class="logo">
     <span class="icon">🎵</span>
     <span class="title">TuneSpace</span>
   </div>
   
+  <!-- Signup Form -->
   <div class="login-box">
     <h2>Create Account</h2>
 
@@ -33,6 +35,12 @@
 
     <!-- Sign Up Button -->
     <button class="signup-btn" (click)="register()">Sign Up</button>
+
+    <!-- Display QR code for 2FA after successful registration -->
+    <div *ngIf="qrCode" class="qr-code">
+      <h3>Scan this QR code in your Authenticator app</h3>
+      <img [src]="qrCode" alt="2FA QR Code" />
+    </div>
     
     <!-- Login Navigation Link -->
     <p class="login-text">
@@ -43,4 +51,3 @@
   <!-- Footer -->
   <p class="footer">Discover, Create, and Share Your Sound.</p>
 </div>
-
