@@ -18,7 +18,7 @@ export class HomeComponent {
       author: 'DJ Aurora',
       date: '2024-10-02',
       tags: ['synthwave', 'electronic'],
-      image: 'assets/images/synthwave.jpg',  // Make sure this path is correct
+      image: 'alternative.jpg',  // Make sure this path is correct
       content: 'A deep dive into retro-futuristic soundscapes...',
       audioPreview: 'assets/audio/synth-preview.mp3',  // Make sure this path is correct
       likes: 0,
@@ -28,7 +28,7 @@ export class HomeComponent {
       author: 'Skyline Avenue',
       date: '2024-09-18',
       tags: ['indie', 'alternative'],
-      image: 'assets/images/indie.jpg',  // Make sure this path is correct
+      image: 'indie.webp',  // Make sure this path is correct
       content: 'Exploring the best new indie tracks of the year...',
       audioPreview: 'assets/audio/indie-preview.mp3',  // Make sure this path is correct
       likes: 0,
