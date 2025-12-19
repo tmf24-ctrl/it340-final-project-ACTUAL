@@ -3,18 +3,18 @@
     <span class="icon">🎵</span>
     <span class="title">TuneSpace</span>
   </div>
-  
+
   <div class="login-box">
     <h2>Log In</h2>
 
-    <!-- Email input field -->
+    <!-- Email input -->
     <input
       type="email"
       placeholder="Email"
       [(ngModel)]="email"
     />
 
-    <!-- Password input field -->
+    <!-- Password input -->
     <input
       type="password"
       placeholder="Password"
@@ -22,15 +22,37 @@
     />
 
     <!-- Log In Button -->
-    <button class="login-btn" (click)="login()">Log In</button>
-    
+    <button class="login-btn" (click)="startLogin()">Log In</button>
+
     <!-- Sign Up Navigation -->
     <p class="signup-text">
       Don't have an account?
       <a [routerLink]="['/signup']">Sign Up</a>
     </p>
   </div>
-  
+
   <!-- Footer -->
   <p class="footer">Discover, Create, and Share Your Sound.</p>
+</div>
+
+<!-- ===== 2FA AUTHENTICATOR POPUP ===== -->
+<div class="modal-backdrop" *ngIf="show2FAModal">
+  <div class="modal">
+    <h3>Two-Factor Authentication</h3>
+    <p>Enter the 6-digit code from your authenticator app</p>
+
+    <input
+      type="text"
+      maxlength="6"
+      placeholder="123456"
+      [(ngModel)]="token"
+    />
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <div class="modal-buttons">
+      <button (click)="confirm2FA()">Verify & Log In</button>
+      <button class="cancel" (click)="cancel2FA()">Cancel</button>
+    </div>
+  </div>
 </div>
