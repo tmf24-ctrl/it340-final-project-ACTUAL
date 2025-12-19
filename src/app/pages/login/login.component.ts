@@ -1,60 +1,70 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
-import { RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; //import http client
+import { Router, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, RouterModule],  // Import FormsModule here for ngModel
+  imports: [
+    CommonModule,    // Needed for *ngIf
+    FormsModule,     // Needed for ngModel
+    RouterModule,    // Needed for routerLink & navigate
+    HttpClientModule // Needed for HttpClient
+  ]
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
-  token: string = '';
+  email = '';
+  password = '';
+  token = '';
+
+  show2FAModal = false;
+  errorMessage = '';
 
   constructor(private router: Router, private http: HttpClient) {}
 
-  login() {
-    console.log('Logging in with:', this.email, this.password);
-
-    // Check if email and password are non-empty strings
-    if (this.email.trim() !== '' && this.password.trim() !== '') {
-      this.router.navigate(['/home']);  // Navigate to the homepage route
-    } else {
-      alert("Please enter both email and password!");
+  startLogin() {
+    console.log('startLogin clicked', this.email, this.password);
+    if (!this.email || !this.password) {
+      alert('Please enter email and password');
       return;
     }
-    
-    this.http.post<any>('http://10.10.10.10:4001/login', {
-    	email: this.email,
-    	password: this.password,
-    	token: this.token //optional if using 2fa
+    this.show2FAModal = true;
+  }
+
+  confirm2FA() {
+    this.http.post<any>('http://10.10.10.30:4000/login', {
+      email: this.email,
+      password: this.password,
+      token: this.token
     }).subscribe({
-    	next: (res) => {
-    		console.log('Login response:', res);
-    		
-    		if (res.token) {
-    			localStorage.setItem('jwt', res.token);
-    			alert('Login Successful!')
-    			this.router.navigate(['/home']);
-    		} else {
-			alert('Login failed: ' + (res.error || 'Unknown error'));
-		}
-    	},
-    	error: (err) => {
-    		console.error('Login API error:', err);
-    		alert('Server error');
-    	}
-  });
-}
+      next: (res) => {
+        localStorage.setItem('jwt', res.token);
+        this.show2FAModal = false;
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.errorMessage = 'Invalid email or password';
+        } else if (err.status === 403) {
+          this.errorMessage = 'Invalid authenticator code';
+        } else {
+          this.errorMessage = 'Server error';
+        }
+      }
+    });
+  }
+
+  cancel2FA() {
+    this.show2FAModal = false;
+    this.token = '';
+    this.errorMessage = '';
+  }
 
   goToSignup() {
-    console.log("Navigate to signup page");
     this.router.navigate(['/signup']);
   }
 }
-	
