@@ -1,60 +1,68 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClient } from '@angular/common/http'; //import http client
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule, RouterModule],  // Import FormsModule here for ngModel
+  imports: [FormsModule, RouterModule]
 })
 export class LoginComponent {
+
   email: string = '';
   password: string = '';
-  token: string = '';
+  token: string = ''; // 2FA token (optional)
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
 
   login() {
-    console.log('Logging in with:', this.email, this.password);
-
-    // Check if email and password are non-empty strings
-    if (this.email.trim() !== '' && this.password.trim() !== '') {
-      this.router.navigate(['/home']);  // Navigate to the homepage route
-    } else {
-      alert("Please enter both email and password!");
+    // Basic input validation
+    if (this.email.trim() === '' || this.password.trim() === '') {
+      alert('Please enter both email and password!');
       return;
     }
-    
-    this.http.post<any>('http://10.10.10.10:4001/login', {
-    	email: this.email,
-    	password: this.password,
-    	token: this.token //optional if using 2fa
+
+    // Send login request to auth service
+    this.http.post<any>('http://10.10.10.30:4000/login', {
+      email: this.email,
+      password: this.password,
+      token: this.token
     }).subscribe({
-    	next: (res) => {
-    		console.log('Login response:', res);
-    		
-    		if (res.token) {
-    			localStorage.setItem('jwt', res.token);
-    			alert('Login Successful!')
-    			this.router.navigate(['/home']);
-    		} else {
-			alert('Login failed: ' + (res.error || 'Unknown error'));
-		}
-    	},
-    	error: (err) => {
-    		console.error('Login API error:', err);
-    		alert('Server error');
-    	}
-  });
-}
+      next: (res) => {
+        console.log('Login response:', res);
+
+        if (res.token) {
+          // Save JWT
+          localStorage.setItem('jwt', res.token);
+
+          alert('Login Successful!');
+          this.router.navigate(['/home']);
+        } else {
+          alert('Login failed');
+        }
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+
+        if (err.status === 401) {
+          alert('Invalid email or password');
+        } else if (err.status === 403) {
+          alert('Invalid authentication code');
+        } else {
+          alert('Server error. Please try again later.');
+        }
+      }
+    });
+  }
 
   goToSignup() {
-    console.log("Navigate to signup page");
     this.router.navigate(['/signup']);
   }
 }
-	
