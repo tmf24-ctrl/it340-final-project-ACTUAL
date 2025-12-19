@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';  // Import standalone AppComponent
 import { AppRoutingModule } from './app-routing.module'; // Import AppRoutingModule
-import {HomePageComponent} from './pages/homepage/home.component'; //import home page
+import {HomeComponent} from './pages/homepage/home.component'; //import home page
 
 @NgModule({
   imports: [
     BrowserModule,
-    HomePageComponent,
+    HomeComponent,
     AppRoutingModule,  // Import AppRoutingModule here
     AppComponent,      // Import standalone AppComponent (do NOT declare it)
   ],

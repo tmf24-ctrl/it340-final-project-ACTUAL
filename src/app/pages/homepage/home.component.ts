@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';  // Import FormsModule if you plan
   styleUrls: ['./home.component.css'],  // Path to your CSS file (if you have one)
   imports: [CommonModule, FormsModule],  // Import necessary Angular modules
 })
-export class HomePageComponent {
+export class HomeComponent {
   searchQuery: string = '';
 
   posts = [

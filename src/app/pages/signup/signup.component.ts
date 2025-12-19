@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; // import AuthService
-import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service'; // import auth service
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrls: ['./signup.component.scss'],
   imports: [
   	FormsModule,
-  	HttpClientModule,
+	CommonModule,
   	RouterModule
   ],
 })
@@ -43,6 +43,6 @@ export class SignupComponent {
   }
 
   goToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
 }
