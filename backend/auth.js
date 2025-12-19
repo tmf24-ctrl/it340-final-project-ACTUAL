@@ -38,14 +38,25 @@ app.post('/login', async (req, res) => {
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) return res.sendStatus(401);
 
+  // ===========================
+  // ADDITION: ENFORCE MANDATORY 2FA
+  // ===========================
+  if (!user.twofa_secret) {
+    return res.status(403).json({ message: '2FA not configured for this account' });
+  }
+
   const verified = speakeasy.totp.verify({
     secret: user.twofa_secret,
     encoding: 'base32',
-    token
+    token,
+    window: 1
   });
 
   if (!verified) return res.sendStatus(403);
 
+  // ===========================
+  // ORIGINAL JWT ISSUANCE
+  // ===========================
   const jwtToken = jwt.sign(
     { id: user.id },
     'SUPER_SECRET_KEY',
