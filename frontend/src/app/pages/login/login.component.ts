@@ -1,34 +1,72 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';  // Import FormsModule
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   standalone: true,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [FormsModule],  // Import FormsModule here for ngModel
+  imports: [FormsModule, RouterModule]
 })
 export class LoginComponent {
-  email: string = '';
-  password: string = '';
 
-  constructor(private router: Router) {}
+  email = '';
+  password = '';
+  token = '';
 
-  login() {
-    console.log('Logging in with:', this.email, this.password);
+  show2FAModal = false;
+  errorMessage = '';
 
-    // Check if email and password are non-empty strings
-    if (this.email.trim() !== '' && this.password.trim() !== '') {
-      this.router.navigate(['/home']);  // Navigate to the homepage route
-    } else {
-      alert("Please enter both email and password!");
+  constructor(
+    private router: Router,
+    private http: HttpClient
+  ) {}
+
+  // Step 1: Validate email/password locally
+  startLogin() {
+    if (!this.email || !this.password) {
+      alert('Please enter email and password');
+      return;
     }
+
+    // Show 2FA popup
+    this.show2FAModal = true;
+  }
+
+  // Step 2: Send full login request
+  confirm2FA() {
+    this.http.post<any>('http://10.10.10.10:4000/login', {
+      email: this.email,
+      password: this.password,
+      token: this.token
+    }).subscribe({
+      next: (res) => {
+        localStorage.setItem('jwt', res.token);
+        this.show2FAModal = false;
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.errorMessage = 'Invalid email or password';
+        } else if (err.status === 403) {
+          this.errorMessage = 'Invalid authenticator code';
+        } else {
+          this.errorMessage = 'Server error';
+        }
+      }
+    });
+  }
+
+  cancel2FA() {
+    this.show2FAModal = false;
+    this.token = '';
+    this.errorMessage = '';
   }
 
   goToSignup() {
-    console.log("Navigate to signup page");
     this.router.navigate(['/signup']);
   }
 }
-
